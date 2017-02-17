@@ -7,7 +7,6 @@ namespace AuthBot.Controllers
     using System.Security.Cryptography;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Http;
     using Autofac;
     using Helpers;

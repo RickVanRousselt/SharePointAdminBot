@@ -6,9 +6,8 @@ namespace AuthBot
     using System.Threading.Tasks;
     using Helpers;
     using Microsoft.Bot.Builder.Dialogs;
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
     using Models;
-    using System.Configuration;
+
     public static class ContextExtensions
     {
         public static async Task<string> GetAccessToken(this IBotContext context, string resourceId)

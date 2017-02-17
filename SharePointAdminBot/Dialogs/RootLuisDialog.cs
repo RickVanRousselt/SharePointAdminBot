@@ -8,6 +8,7 @@ using AuthBot.Models;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
+using SharePointAdminBot.Infra;
 
 namespace SharePointAdminBot.Dialogs
 {
@@ -28,6 +29,9 @@ namespace SharePointAdminBot.Dialogs
         public async Task GetTenantInfo(IDialogContext context, LuisResult result)
         {
             var token = await context.GetAccessToken(AuthSettings.Scopes);
+            var authResult = new AuthResult();
+            context.UserData.TryGetValue(ContextConstants.AuthResultKey, out authResult);
+            Tenant.GetTenantProperties(token);
 
         }
     }

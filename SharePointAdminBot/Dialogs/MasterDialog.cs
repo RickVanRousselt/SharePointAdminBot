@@ -56,7 +56,8 @@ namespace SharePointAdminBot.Dialogs
                     var token = await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]);
                     var result = new AuthResult();
                     context.UserData.TryGetValue(ContextConstants.AuthResultKey, out result);
-                    if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
+                   
+                        if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
                     await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
                 }
             }

@@ -1,65 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using AuthBot;
 using AuthBot.Dialogs;
-using AuthBot.Models;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using Newtonsoft.Json.Linq;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace SharePointAdminBot.Dialogs
 {
     [Serializable]
     public class MasterDialog : IDialog<string>
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("MessagesController");
-
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("MasterDialog");
+        private string _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
 
         public async Task StartAsync(IDialogContext context)
-        {
+        {;
             context.Wait(MessageReceivedAsync);
         }
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
             var message = await item;
-            if (message.Text == "logout")
+            if (message.Text == "logout" || message.Text == "reset")
             {
+                context.UserData.RemoveValue("ResourceId");
+                _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
                 await context.Logout();
-                context.Wait(this.MessageReceivedAsync);
+                context.Wait(MessageReceivedAsync);
             }
             else
             {
-                if (string.IsNullOrEmpty(await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"])))
+                if (Regex.IsMatch(message.Text,
+                    @"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"))
                 {
-                    try
+                    context.UserData.SetValue("ResourceId", message.Text);
+                    _resourceId = message.Text;
+                }
+                if(context.UserData.TryGetValue("ResourceId", out _resourceId))
+                {
+                    if (string.IsNullOrEmpty(await context.GetAccessToken(_resourceId)))
                     {
-                        await
-                            context.Forward(
-                                new AzureAuthDialog(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]),
-                                this.ResumeAfterAuth, message, CancellationToken.None);
+                        try
+                        {
+                            string reply = $"First we need to authenticate you";
+                            await context.PostAsync(reply);
+                            await
+                                context.Forward(
+                                    new AzureAuthDialog(_resourceId),
+                                    ResumeAfterAuth, message, CancellationToken.None);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Logger.IsErrorEnabled) Logger.Error("Error in masterdialog calling authentication", ex);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        if (Logger.IsErrorEnabled) Logger.Error("Error in Post MessageController", ex);
+                        try
+                        {
+                            if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
+                            await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
+                        }
+                        catch (Exception e)
+                        {
+                            if (Logger.IsErrorEnabled) Logger.Error("Error in masterdialog forwarding to Luis", e);
+                            string reply = $"Sorry something went wrong";
+                            await context.PostAsync(reply);
+                        }
                     }
                 }
                 else
                 {
-                    var token = await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]);
-                    var result = new AuthResult();
-                    context.UserData.TryGetValue(ContextConstants.AuthResultKey, out result);
-                   
-                        if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
-                    await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
+                    string reply = $"Sorry but {message.Text} is not a valid URL";
+                    await context.PostAsync(reply);
+                    context.Wait(MessageReceivedAsync);
                 }
+
             }
 
         }

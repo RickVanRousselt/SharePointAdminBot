@@ -4,15 +4,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using log4net.Repository.Hierarchy;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using Newtonsoft.Json;
 using SharePointAdminBot.Dialogs;
 
-
-namespace SharePointAdminBot
+namespace SharePointAdminBot.Controllers
 {
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -34,14 +30,16 @@ namespace SharePointAdminBot
                 catch (Exception ex)
                 {
                     if (Logger.IsErrorEnabled) Logger.Error("Error in Post MessageController", ex);
+                    ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                    Activity reply = activity.CreateReply("Sorry something went wrong. Please try again later or log an issue https://github.com/RickVanRousselt/SharePointAdminBot");
+                    connector.Conversations.SendToConversation(reply);
                 }
-              
             }
             else
             {
-                await this.HandleSystemMessage(activity);
+                await HandleSystemMessage(activity);
             }
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+            return new HttpResponseMessage(HttpStatusCode.Accepted);
         }
 
         private async Task<Activity> HandleSystemMessage(Activity message)
@@ -61,10 +59,8 @@ namespace SharePointAdminBot
                         {
                             if (Logger.IsDebugEnabled) Logger.DebugFormat("New member added to chat: {0}", newMember.Name);
                             ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl));
-                            Activity reply = message.CreateReply("Hi I'm the SharePoint Admin Bot. Please logon first");
-                           await connector.Conversations.ReplyToActivityAsync(reply);
-                            //     Conversation.SendAsync(message, () => new MasterDialog());
-                           
+                            Activity reply = message.CreateReply("Hi I'm the SharePoint Admin Bot. What's the Url you want me to work with?");
+                            connector.Conversations.SendToConversation(reply);
                         }
                 }
             }

@@ -4,6 +4,8 @@ Currently the features are limited but the goal is to make them grow. If the fea
 
 #Start to use the Bot
 To use the SharePoint Admin Bot you do not have to clone or download the code. You can just connect to it using the links below.
+The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean. Luis also has to learn so if your sentence is not recongized try to rephrase the question.
+
 
 
 ##If you want your own version of the SharePoint Admin Bot then you can follow these steps.
@@ -16,13 +18,8 @@ To use the SharePoint Admin Bot you do not have to clone or download the code. Y
 * Now you can start talking to your own personal SharePoint Admin Bot from the Bot Framework test page and if you want you can even configure more channels.
 
 
-The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean. Luis also has to learn so if your sentence is not recongized try to rephrase the question.
 
-
-
-
-
-#Current features
+##Current features
 #####Get Site Collection properties
 Returns list of general properties from the Site Collection
 #####Get Web properties

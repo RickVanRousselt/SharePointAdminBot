@@ -21,7 +21,7 @@ The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean.
 
 
 #Current features
-##Get Site Collection properties
+###Get Site Collection properties
 Returns list of general properties from the Site Collection
 ##Get Web properties
 Returns list of general properties from the Rootweb of a Site Collection

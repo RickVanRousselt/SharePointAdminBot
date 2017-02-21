@@ -22,7 +22,8 @@ namespace AuthBot.Helpers
                     redirectUri,
                     Microsoft.IdentityModel.Clients.ActiveDirectory.UserIdentifier.AnyUser,
                     $"state={extraParameters}");
-                return uri.ToString();       
+                return uri.ToString();
+
         }
 
         public static async Task<string> GetAuthUrlAsync(ResumptionCookie resumptionCookie, string[] scopes)

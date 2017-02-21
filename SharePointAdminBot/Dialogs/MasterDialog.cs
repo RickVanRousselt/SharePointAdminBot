@@ -17,8 +17,8 @@ namespace SharePointAdminBot.Dialogs
         private string _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
 
         public async Task StartAsync(IDialogContext context)
-        {;
-            context.Wait(MessageReceivedAsync);
+        {
+           context.Wait(MessageReceivedAsync);
         }
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
@@ -33,9 +33,10 @@ namespace SharePointAdminBot.Dialogs
             }
             else
             {
-                if (Regex.IsMatch(message.Text,
-                    @"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"))
+                Uri resourceUrl = null;
+                if (Uri.TryCreate(message.Text,UriKind.Absolute, out resourceUrl))
                 {
+                    //uri.tryparse
                     context.UserData.SetValue("ResourceId", message.Text);
                     _resourceId = message.Text;
                 }

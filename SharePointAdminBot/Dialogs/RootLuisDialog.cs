@@ -21,6 +21,7 @@ namespace SharePointAdminBot.Dialogs
         private string _resourceId;
         private AuthResult _authResult;
 
+
         [LuisIntent("")]
         [LuisIntent("None")]
         public async Task None(IDialogContext context, LuisResult result)
@@ -50,7 +51,7 @@ namespace SharePointAdminBot.Dialogs
         }
 
         [LuisIntent("Create")]
-        public async Task CreateSiteCollection(IDialogContext context, LuisResult result)
+        public void CreateSiteCollection(IDialogContext context, LuisResult result)
         {
             var createSiteColFormDialog = FormDialog.FromForm(this.BuildCreateSiteColForm, FormOptions.PromptInStart);
             context.Call(createSiteColFormDialog, AfterUrlProvided);

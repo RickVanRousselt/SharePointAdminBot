@@ -2,19 +2,22 @@
 The SharePoint Admin Bot is an attempt to make the everyday routinous jobs that a SharePoint Online Administrator or Power User easier.
 Currently the features are limited but they will grow steadily. If the feature you want is not in there yet please submit a feature request or even better contribute and do a pull request.
 
-#Use the Bot
+#Start to use the Bot
 To use the SharePoint Admin Bot you do not have to clone or download the code. You can just connect to it using the links below.
 The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean. Luis also has to learn so if your sentence is not recongized try to rephrase the question.
 
 
 
 #Current features
-##Get Site Collection properties
+###Get Site Collection properties
 Returns list of general properties from the Site Collection
-##Get Web properties
+###Get Web properties
 Returns list of general properties from the Rootweb of a Site Collection
-##Create Site Collection
+###Create Site Collection
 Asks several question and then creates a Site Collection.
+
+
+
 
 
 

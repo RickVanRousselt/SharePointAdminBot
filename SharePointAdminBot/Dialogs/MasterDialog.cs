@@ -7,6 +7,8 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using AuthBot.Helpers;
+using AuthBot.Models;
 
 namespace SharePointAdminBot.Dialogs
 {
@@ -18,7 +20,7 @@ namespace SharePointAdminBot.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
-           context.Wait(MessageReceivedAsync);
+            context.Wait(MessageReceivedAsync);
         }
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
@@ -33,16 +35,17 @@ namespace SharePointAdminBot.Dialogs
             }
             else
             {
+                var welcome = false;
                 Uri resourceUrl = null;
-                if (Uri.TryCreate(message.Text,UriKind.Absolute, out resourceUrl))
+                if (Uri.TryCreate(message.Text, UriKind.Absolute, out resourceUrl))
                 {
                     //uri.tryparse
                     context.UserData.SetValue("ResourceId", message.Text);
                     _resourceId = message.Text;
                 }
-                if(context.UserData.TryGetValue("ResourceId", out _resourceId))
+                if (context.UserData.TryGetValue("ResourceId", out _resourceId))
                 {
-                    if (string.IsNullOrEmpty(await context.GetAccessToken(_resourceId)))
+                    if (string.IsNullOrEmpty(await context.GetAccessToken(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"])))
                     {
                         try
                         {
@@ -50,7 +53,7 @@ namespace SharePointAdminBot.Dialogs
                             await context.PostAsync(reply);
                             await
                                 context.Forward(
-                                    new AzureAuthDialog(_resourceId),
+                                    new AzureAuthDialog(ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"]),
                                     ResumeAfterAuth, message, CancellationToken.None);
                         }
                         catch (Exception ex)
@@ -62,18 +65,36 @@ namespace SharePointAdminBot.Dialogs
                     {
                         try
                         {
-                            if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
-                            await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
+                            if (string.IsNullOrEmpty(await context.GetAccessToken(_resourceId)))
+                            {
+                                AuthResult _authResult;
+                                context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
+                                InMemoryTokenCacheADAL tokenCache = new InMemoryTokenCacheADAL(_authResult.TokenCache);
+                                var result = await AzureActiveDirectoryHelper.GetToken(_authResult.UserUniqueId, tokenCache, _resourceId);
+                                _authResult.AccessToken = result.AccessToken;
+                                _authResult.ExpiresOnUtcTicks = result.ExpiresOnUtcTicks;
+                                _authResult.TokenCache = tokenCache.Serialize();
+                                context.StoreAuthResult(_authResult);
+                                context.Wait(MessageReceivedAsync);
+                            }
+                            else
+                            {
+                                if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
+                                await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
+                            }
+
+
                         }
                         catch (Exception e)
                         {
                             if (Logger.IsErrorEnabled) Logger.Error("Error in masterdialog forwarding to Luis", e);
                             string reply = $"Sorry something went wrong";
                             await context.PostAsync(reply);
+                            context.Wait(MessageReceivedAsync);
                         }
                     }
                 }
-                else
+                else if (context.ConversationData.TryGetValue("Welcome", out welcome))
                 {
                     string reply = $"Sorry but {message.Text} is not a valid URL";
                     await context.PostAsync(reply);

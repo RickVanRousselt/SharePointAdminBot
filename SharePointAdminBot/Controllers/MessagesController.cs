@@ -59,6 +59,9 @@ namespace SharePointAdminBot.Controllers
                         {
                             if (Logger.IsDebugEnabled) Logger.DebugFormat("New member added to chat: {0}", newMember.Name);
                             ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl));
+                            StateClient stateClient = message.GetStateClient();
+                            BotData conversationData = await stateClient.BotState.GetConversationDataAsync(message.ChannelId, message.From.Id);
+                            conversationData.SetProperty("Welcome", true);
                             Activity reply = message.CreateReply("Hi I'm the SharePoint Admin Bot. What's the Url you want me to work with?");
                             await connector.Conversations.SendToConversationAsync(reply);
                         }

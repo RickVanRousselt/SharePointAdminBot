@@ -29,7 +29,7 @@ namespace SharePointAdminBot.Dialogs
             string message = $"Sorry I did not understand: " + string.Join(", ", result.Intents.Select(i => i.Intent));
             Logger.InfoFormat("No intent found by luis:{0}", result);
             await context.PostAsync(message);
-            context.Done<string>(null);
+            context.Wait(MessageReceived);
         }
 
         [LuisIntent("GetInfo")]
@@ -51,7 +51,7 @@ namespace SharePointAdminBot.Dialogs
         }
 
         [LuisIntent("Create")]
-        public void CreateSiteCollection(IDialogContext context, LuisResult result)
+        public async Task CreateSiteCollection(IDialogContext context, LuisResult result)
         {
             var createSiteColFormDialog = FormDialog.FromForm(this.BuildCreateSiteColForm, FormOptions.PromptInStart);
             context.Call(createSiteColFormDialog, AfterUrlProvided);

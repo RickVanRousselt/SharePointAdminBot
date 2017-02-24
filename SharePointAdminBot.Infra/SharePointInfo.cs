@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AuthBot.Models;
+using Microsoft.ApplicationInsights;
 using Microsoft.Graph;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
@@ -18,6 +19,7 @@ namespace SharePointAdminBot.Infra
 
         public static List<string> GetSiteProperties(AuthResult result, string url)
         {
+            var telemetry = new TelemetryClient();
             try
             {
                 AuthenticationManager authManager = new AuthenticationManager();
@@ -44,15 +46,15 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
-                Logger.Error("Error getting properties", ex);
+                telemetry.TrackException(ex);
                 return null;
-               // throw;
             }
          
         }
 
         public static List<string> GetWebProperties(AuthResult result, string url)
         {
+            var telemetry = new TelemetryClient();
             try
             {
                 AuthenticationManager authManager = new AuthenticationManager();
@@ -79,7 +81,7 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
-                Logger.Error("Error getting properties", ex);
+                telemetry.TrackException(ex);
                 return null;
             }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AuthBot.Models;
+using Microsoft.ApplicationInsights;
 using Microsoft.Online.SharePoint.TenantAdministration;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
@@ -17,6 +18,7 @@ namespace SharePointAdminBot.Infra
 
         public static bool CreateSiteColleciton(AuthResult result, CreateSiteCollectionQuery formResult, string url)
         {
+            var telemetry = new TelemetryClient();
             Logger.Debug($"Starting CreateSiteCollection");
             bool succes = false;
             try
@@ -54,7 +56,7 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
-                Logger.Error("Error in create site collection", ex);
+                telemetry.TrackException(ex);
             }
             return succes;
         }

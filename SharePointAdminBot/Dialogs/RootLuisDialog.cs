@@ -18,7 +18,7 @@ namespace SharePointAdminBot.Dialogs
     [LuisModel("c75d7bef-7f85-4ac5-a22e-0b78de2c7328", "863224eec48243e6b163c4bcbdd1a4c8")]
     public class RootLuisDialog : LuisDialog<object>
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("RootLuisDialog");
+      
         private string _resourceId;
         private AuthResult _authResult;
 
@@ -28,7 +28,7 @@ namespace SharePointAdminBot.Dialogs
         public async Task None(IDialogContext context, LuisResult result)
         {
             string message = $"Sorry I did not understand: " + string.Join(", ", result.Intents.Select(i => i.Intent));
-            Logger.InfoFormat("No intent found by luis:{0}", result);
+            System.Diagnostics.Trace.TraceInformation("No intent found by luis:{0}", result);
             await context.PostAsync(message);
             context.Wait(MessageReceived);
         }
@@ -36,6 +36,7 @@ namespace SharePointAdminBot.Dialogs
         [LuisIntent("GetInfo")]
         public async Task GetSiteInfo(IDialogContext context, LuisResult result)
         {
+            System.Diagnostics.Trace.TraceInformation($"GetInfo found by LUIS:{result}");
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
             context.UserData.TryGetValue("ResourceId", out _resourceId);
             List<string> returnedItems;
@@ -54,6 +55,7 @@ namespace SharePointAdminBot.Dialogs
         [LuisIntent("Create")]
         public async Task CreateSiteCollection(IDialogContext context, LuisResult result)
         {
+            System.Diagnostics.Trace.TraceInformation($"Create found by LUIS:{result}");
             var createSiteColFormDialog = FormDialog.FromForm(this.BuildCreateSiteColForm, FormOptions.PromptInStart);
             context.Call(createSiteColFormDialog, AfterUrlProvided);
         }
@@ -61,6 +63,7 @@ namespace SharePointAdminBot.Dialogs
         [LuisIntent("Logout")]
         public async Task Logout(IDialogContext context, LuisResult result)
         {
+            System.Diagnostics.Trace.TraceInformation($"Logout found by LUIS:{result}");
             context.UserData.RemoveValue("ResourceId");
             _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
             await context.Logout();
@@ -98,6 +101,7 @@ namespace SharePointAdminBot.Dialogs
             }
             else
             {
+                System.Diagnostics.Trace.TraceInformation("Site Collection creation error");
                 string message = $"Sorry something went wrong. Please try again later.";
                 await context.PostAsync(message);
             }

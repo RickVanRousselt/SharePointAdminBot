@@ -9,14 +9,17 @@ using System.Configuration;
 using System.Text.RegularExpressions;
 using AuthBot.Helpers;
 using AuthBot.Models;
+using log4net.Repository.Hierarchy;
+using Microsoft.ApplicationInsights;
 
 namespace SharePointAdminBot.Dialogs
 {
     [Serializable]
     public class MasterDialog : IDialog<string>
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("MasterDialog");
         private string _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
+        [NonSerialized()]
+        private TelemetryClient telemetry = new TelemetryClient();
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -25,6 +28,7 @@ namespace SharePointAdminBot.Dialogs
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
+
             var message = await item;
             if (message.Text == "logout" || message.Text == "reset")
             {
@@ -58,7 +62,8 @@ namespace SharePointAdminBot.Dialogs
                         }
                         catch (Exception ex)
                         {
-                            if (Logger.IsErrorEnabled) Logger.Error("Error in masterdialog calling authentication", ex);
+                            telemetry.TrackTrace("Error in masterdialog calling authentication");
+                            telemetry.TrackException(ex);
                         }
                     }
                     else
@@ -67,6 +72,7 @@ namespace SharePointAdminBot.Dialogs
                         {
                             if (string.IsNullOrEmpty(await context.GetAccessToken(_resourceId)))
                             {
+                                telemetry.TrackTrace("Re-configuring AuthResult");
                                 AuthResult _authResult;
                                 context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
                                 InMemoryTokenCacheADAL tokenCache = new InMemoryTokenCacheADAL(_authResult.TokenCache);
@@ -79,15 +85,16 @@ namespace SharePointAdminBot.Dialogs
                             }
                             else
                             {
-                                if (Logger.IsDebugEnabled) Logger.DebugFormat("Calling RootLuisDialog");
+                                telemetry.TrackTrace("Calling RootLuisDialog");
                                 await context.Forward(new RootLuisDialog(), null, message, CancellationToken.None);
                             }
 
 
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-                            if (Logger.IsErrorEnabled) Logger.Error("Error in masterdialog forwarding to Luis", e);
+                            telemetry.TrackException(ex);
+                            telemetry.TrackTrace("Error in masterdialog forwarding to Luis");
                             string reply = $"Sorry something went wrong";
                             await context.PostAsync(reply);
                             context.Wait(MessageReceivedAsync);
@@ -107,7 +114,6 @@ namespace SharePointAdminBot.Dialogs
 
         private async Task ResumeAfterAuth(IDialogContext context, IAwaitable<string> result)
         {
-            if (Logger.IsDebugEnabled) Logger.DebugFormat("Loggin Success");
             var message = await result;
             await context.PostAsync(message);
             await context.PostAsync("What would you like me to do?");

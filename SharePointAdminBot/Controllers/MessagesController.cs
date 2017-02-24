@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using SharePointAdminBot.Dialogs;
@@ -13,14 +14,14 @@ namespace SharePointAdminBot.Controllers
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("MessagesController");
-
+   
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            var telemetry = new TelemetryClient();
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
                 try
@@ -29,7 +30,7 @@ namespace SharePointAdminBot.Controllers
                 }
                 catch (Exception ex)
                 {
-                    if (Logger.IsErrorEnabled) Logger.Error("Error in Post MessageController", ex);
+                    telemetry.TrackException(ex);
                     ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                     Activity reply = activity.CreateReply("Sorry something went wrong. Please try again later or log an issue https://github.com/RickVanRousselt/SharePointAdminBot");
                     connector.Conversations.SendToConversation(reply);
@@ -57,7 +58,8 @@ namespace SharePointAdminBot.Controllers
                     if (newMembers != null)
                         foreach (var newMember in newMembers)
                         {
-                            if (Logger.IsDebugEnabled) Logger.DebugFormat("New member added to chat: {0}", newMember.Name);
+                            var telemetry = new TelemetryClient();
+                            telemetry.TrackTrace($"New member added to chat: {newMember.Name}");
                             ConnectorClient connector = new ConnectorClient(new Uri(message.ServiceUrl));
                             StateClient stateClient = message.GetStateClient();
                             BotData conversationData = await stateClient.BotState.GetConversationDataAsync(message.ChannelId, message.From.Id);

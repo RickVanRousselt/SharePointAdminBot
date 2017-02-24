@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthBot;
@@ -55,6 +56,15 @@ namespace SharePointAdminBot.Dialogs
         {
             var createSiteColFormDialog = FormDialog.FromForm(this.BuildCreateSiteColForm, FormOptions.PromptInStart);
             context.Call(createSiteColFormDialog, AfterUrlProvided);
+        }
+
+        [LuisIntent("Logout")]
+        public async Task Logout(IDialogContext context, LuisResult result)
+        {
+            context.UserData.RemoveValue("ResourceId");
+            _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
+            await context.Logout();
+            context.Wait(MessageReceived);
         }
 
         private IForm<CreateSiteCollectionQuery> BuildCreateSiteColForm()

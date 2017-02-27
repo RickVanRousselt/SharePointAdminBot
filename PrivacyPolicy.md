@@ -24,6 +24,7 @@ My chatbot is enabled by Microsofts Bot Framework. Bot Framework is a set of web
 
 Furthermore, SPAdminBot is enabled by the following APIs:
 - Microsoft Graph: for more information about the Microsoft Graph please visit [https://graph.microsoft.io/en-us/](https://graph.microsoft.io/en-us/)
+- AuthBot: Part of the code used in this bot is from the AuthBot. More information can be found here.[https://github.com/MicrosoftDX/AuthBot](https://github.com/MicrosoftDX/AuthBot)
 
 #Changes To This Privacy Policy
 

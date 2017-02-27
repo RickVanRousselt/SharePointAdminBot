@@ -87,6 +87,30 @@ namespace SharePointAdminBot.Infra
 
         }
 
+        public static bool ReIndexSiteCollection(AuthResult result, string url)
+        {
+            var telemetry = new TelemetryClient();
+            try
+            {
+                AuthenticationManager authManager = new AuthenticationManager();
+                var propertyList = new List<string>();
+                using (
+                    ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url,
+                        result.AccessToken))
+                {
+                    context.Web.ReIndexWeb();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                telemetry.TrackException(ex);
+                return false;
+            }
+           
+
+        }
+
         public static string GetTenantId(string token)
         {
             return null;

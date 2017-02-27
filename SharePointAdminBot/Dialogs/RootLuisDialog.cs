@@ -70,6 +70,26 @@ namespace SharePointAdminBot.Dialogs
             context.Wait(MessageReceived);
         }
 
+        [LuisIntent("ReIndex")]
+        public async Task ReIndex(IDialogContext context, LuisResult result)
+        {
+            System.Diagnostics.Trace.TraceInformation($"ReIndex found by LUIS:{result}");
+            context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
+            context.UserData.TryGetValue("ResourceId", out _resourceId);
+            var success = SharePointInfo.ReIndexSiteCollection(_authResult, _resourceId);
+            if (success)
+            {
+                string message = $"Reindexing triggered";
+                await context.PostAsync(message);
+            }
+            else
+            {
+                string message = $"Request for reindex went wrong";
+                await context.PostAsync(message);
+            }
+            context.Wait(MessageReceived);
+        }
+
         private IForm<CreateSiteCollectionQuery> BuildCreateSiteColForm()
         {
             OnCompletionAsyncDelegate<CreateSiteCollectionQuery> processSiteCollectionQuery = async (context, state) =>

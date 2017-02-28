@@ -32,7 +32,6 @@ namespace SharePointAdminBot.Dialogs
 
             return new FormBuilder<AskForUrlQuery>()
                 .Field(nameof(AskForUrlQuery.Url))
-                .Message("What's the URL")
                  .OnCompletion(processAskForUrlQuery)
                 .AddRemainingFields()
                 .Build();

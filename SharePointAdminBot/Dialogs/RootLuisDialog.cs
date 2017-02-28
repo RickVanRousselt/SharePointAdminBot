@@ -82,7 +82,7 @@ namespace SharePointAdminBot.Dialogs
             var success = SharePointInfo.ReIndexSiteCollection(_authResult, formResults.Url);
             if (success)
             {
-                string message = $"Reindexing triggered";
+                string message = $"Reindexing triggered. What's next?";
                 await context.PostAsync(message);
             }
             else
@@ -106,7 +106,8 @@ namespace SharePointAdminBot.Dialogs
                 var message = answer;
                 await context.PostAsync(message);
             }
-
+            var finalMessage = $"What's next?";
+            await context.PostAsync(finalMessage);
             context.Wait(MessageReceived);
         }
 
@@ -123,7 +124,8 @@ namespace SharePointAdminBot.Dialogs
                 var message = answer;
                 await context.PostAsync(message);
             }
-
+            var finalMessage = $"What's next?";
+            await context.PostAsync(finalMessage);
             context.Wait(MessageReceived);
         }
 
@@ -133,12 +135,13 @@ namespace SharePointAdminBot.Dialogs
             var formResults = await result;
             context.UserData.TryGetValue("ResourceId", out _resourceId);
             var tenantUrl = $"https://{_resourceId}-admin.sharepoint.com";
+            WebApiApplication.Telemetry.TrackTrace(context.CreateTraceTelemetry(nameof(AfterUrlProvided), new Dictionary<string, string> { { "Getting admin site:", tenantUrl } }));
             await context.GetAccessToken(tenantUrl);
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
-            var success = Create.CreateSiteColleciton(_authResult, formResults, _resourceId);
+            var success = Create.CreateSiteColleciton(_authResult, formResults, tenantUrl);
             if (success)
             {
-                string message = $"Site Collection creation request send";
+                string message = $"Site Collection creation request send. What's next?";
                 await context.PostAsync(message);
             }
             else

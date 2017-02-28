@@ -77,6 +77,12 @@ namespace AuthBot
         {
             context.UserData.SetValue(ContextConstants.AuthResultKey, authResult);
         }
+        public static AuthResult GetAuthResult(this IBotContext context)
+        {
+            AuthResult result = null;
+            context.UserData.TryGetValue(ContextConstants.AuthResultKey, out result);
+            return result;
+        }
 
         public static async Task Logout(this IBotContext context)
         {

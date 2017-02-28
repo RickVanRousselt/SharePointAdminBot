@@ -23,10 +23,17 @@ namespace SharePointAdminBot.Infra
             bool succes = false;
             try
             {
+
+                //if (!url.Contains("admin"))
+                //{
+                //    url = url.Split()
+                //}
+
                 AuthenticationManager authManager = new AuthenticationManager();
                 var propertyList = new List<string>();
                 using (ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url, result.AccessToken))
                 {
+                    
                     Tenant t = new Tenant(context);
                     SiteCreationProperties props = new SiteCreationProperties();
                     props.Url = formResult.Url;

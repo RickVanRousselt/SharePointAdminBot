@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -45,6 +46,8 @@ namespace SharePointAdminBot.Controllers
 
         private async Task<Activity> HandleSystemMessage(Activity message)
         {
+            WebApiApplication.Telemetry.TrackEvent(@"SystemMessage", new Dictionary<string, string> { { @"Type", message.Type } });
+
             if (message.Type == ActivityTypes.DeleteUserData)
             {
                 // Implement user deletion here
@@ -64,7 +67,7 @@ namespace SharePointAdminBot.Controllers
                             StateClient stateClient = message.GetStateClient();
                             BotData conversationData = await stateClient.BotState.GetConversationDataAsync(message.ChannelId, message.From.Id);
                             conversationData.SetProperty("Welcome", true);
-                            Activity reply = message.CreateReply("Hi I'm the SharePoint Admin Bot. What's the Url you want me to work with?");
+                            Activity reply = message.CreateReply("Hi I'm the SharePoint Admin Bot");
                             await connector.Conversations.SendToConversationAsync(reply);
                         }
                 }

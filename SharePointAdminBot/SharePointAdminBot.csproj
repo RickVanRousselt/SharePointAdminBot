@@ -226,7 +226,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AiExceptionLogger.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\FormBuilder.cs" />

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using AuthBot.Models;
 using Microsoft.ApplicationInsights;
-using Microsoft.Graph;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
 
@@ -15,8 +10,6 @@ namespace SharePointAdminBot.Infra
 {
     public static class SharePointInfo
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("SharePointInfo");
-
         public static List<string> GetSiteProperties(AuthResult result, string url)
         {
             var telemetry = new TelemetryClient();
@@ -93,8 +86,7 @@ namespace SharePointAdminBot.Infra
             try
             {
                 AuthenticationManager authManager = new AuthenticationManager();
-                var propertyList = new List<string>();
-                using (
+               using (
                     ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url,
                         result.AccessToken))
                 {

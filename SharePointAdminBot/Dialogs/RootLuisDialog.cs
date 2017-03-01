@@ -138,7 +138,7 @@ namespace SharePointAdminBot.Dialogs
             WebApiApplication.Telemetry.TrackTrace(context.CreateTraceTelemetry(nameof(AfterUrlProvided), new Dictionary<string, string> { { "Getting admin site:", tenantUrl } }));
             await context.GetAccessToken(tenantUrl);
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
-            var success = Create.CreateSiteColleciton(_authResult, formResults, tenantUrl);
+            var success = Create.CreateSiteColleciton(_authResult, formResults, tenantUrl, _resourceId);
             if (success)
             {
                 string message = $"Site Collection creation request send. What's next?";

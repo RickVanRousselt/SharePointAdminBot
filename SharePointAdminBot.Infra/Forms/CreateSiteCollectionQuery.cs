@@ -7,14 +7,14 @@ namespace SharePointAdminBot.Infra.Forms
     public class CreateSiteCollectionQuery
     {
 
-        [Prompt("Please enter the {&} of the site collection")]
-        public string Url { get; set; }
+        //[Prompt("Please enter the {&} of the site collection you want to create")]
+        //public string Url { get; set; }
 
         [Prompt("What is the {&}?")]
         public string Title { get; set; }
 
-        [Prompt("What's the email address of the {&}?")]
-        public string Owner { get; set; }
+        //[Prompt("What's the email address of the {&}?")]
+        //public string Owner { get; set; }
 
         [Prompt("What's the {&} amount in MB?")]
         public long Storage { get; set; }

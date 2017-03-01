@@ -7,12 +7,8 @@ using AuthBot.Dialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Configuration;
-using System.Text.RegularExpressions;
-using AuthBot.Helpers;
-using AuthBot.Models;
-using log4net.Repository.Hierarchy;
-using Microsoft.ApplicationInsights;
 using Newtonsoft.Json;
+using SharePointAdminBot.Infra;
 
 namespace SharePointAdminBot.Dialogs
 {

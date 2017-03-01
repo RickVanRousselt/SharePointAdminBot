@@ -235,6 +235,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AiExceptionLogger.cs" />
     <Compile Include="Create.cs" />
     <Compile Include="Forms\AskForUrlQuery.cs" />
     <Compile Include="Forms\CreateSiteCollectionQuery.cs" />

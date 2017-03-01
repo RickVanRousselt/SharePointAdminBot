@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Http.ExceptionHandling;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Bot.Builder.Dialogs;
 using Newtonsoft.Json;
 
-namespace SharePointAdminBot
+namespace SharePointAdminBot.Infra
 {
     public class AiExceptionLogger : ExceptionLogger
     {
@@ -68,6 +65,7 @@ namespace SharePointAdminBot
 
             return t;
         }
+
 
         public static ExceptionTelemetry CreateExceptionTelemetry(this IDialogContext ctx, System.Exception ex, IDictionary<string, string> properties = null)
         {

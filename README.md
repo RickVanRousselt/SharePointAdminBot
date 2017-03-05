@@ -8,7 +8,7 @@ The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean.
 
 + [Use the webchat](https://spadminbot.azurewebsites.net)
 + [Thru Skype](https://join.skype.com/bot/3b1b9f8d-3ee6-4bc1-a221-544b58140b74)
-+ 
++ [MS Teams](https://teams.microsoft.com/l/chat/0/0?users=28:3b1b9f8d-3ee6-4bc1-a221-544b58140b74)
 
 ##If you want your own version of the SharePoint Admin Bot then you can follow these steps.
 * Clone or download the repository

@@ -24,10 +24,16 @@ The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean.
 ##Current features
 #####Get Site Collection properties
 Returns list of general properties from the Site Collection
+_Example Question: Get me information about my site collection_
 #####Get Web properties
 Returns list of general properties from the Rootweb of a Site Collection
+_Example Question: Get me information about my web_
 #####Create Site Collection
 Asks several question and then creates a Site Collection.
+_Example Question: Can you create me a new site collection_
+#####Reindex site
+Flags a site collection for reindexing
+_Example Question: Can you reindex a site_
 
 
 

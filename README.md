@@ -38,10 +38,10 @@ _Example Question: Can you reindex a site_
 
 
 #Contribute
-I would love if you would help contribute to this project. 
+I would love if you would help contribute to this project. Not just writing code but a simple feature request is enough.
 
 
 #More Information
-Check out my [blog](https://www.rickvanrousselt.com/) for more information on the SharePoint Admin Bot
+Check out my [blog](https://www.rickvanrousselt.com/spadminbot/) for more information on the SharePoint Admin Bot
 
 [![MIT license](https://img.shields.io/npm/l/express.svg)](https://github.com/RickVanRousselt/SharePointAdminBot/blob/master/LICENSE)

@@ -18,7 +18,6 @@ namespace SharePointAdminBot.Infra
         public static bool CreateSiteColleciton(AuthResult result, CreateSiteCollectionQuery formResult, string tenantUrl, string resourceId)
         {
             var telemetry = new TelemetryClient();
-            Logger.Debug($"Starting CreateSiteCollection");
             bool succes = false;
             var telProps = new Dictionary<string,string>();
             try

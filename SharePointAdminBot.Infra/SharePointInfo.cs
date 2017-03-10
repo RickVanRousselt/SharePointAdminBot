@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using AuthBot.Models;
-using Microsoft.Graph;
+using Microsoft.ApplicationInsights;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
 
@@ -14,10 +10,9 @@ namespace SharePointAdminBot.Infra
 {
     public static class SharePointInfo
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger("SharePointInfo");
-
         public static List<string> GetSiteProperties(AuthResult result, string url)
         {
+            var telemetry = new TelemetryClient();
             try
             {
                 AuthenticationManager authManager = new AuthenticationManager();
@@ -44,15 +39,15 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
-                Logger.Error("Error getting properties", ex);
+                telemetry.TrackException(ex);
                 return null;
-               // throw;
             }
          
         }
 
         public static List<string> GetWebProperties(AuthResult result, string url)
         {
+            var telemetry = new TelemetryClient();
             try
             {
                 AuthenticationManager authManager = new AuthenticationManager();
@@ -79,9 +74,32 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
-                Logger.Error("Error getting properties", ex);
+                telemetry.TrackException(ex);
                 return null;
             }
+
+        }
+
+        public static bool ReIndexSiteCollection(AuthResult result, string url)
+        {
+            var telemetry = new TelemetryClient();
+            try
+            {
+                AuthenticationManager authManager = new AuthenticationManager();
+               using (
+                    ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url,
+                        result.AccessToken))
+                {
+                    context.Web.ReIndexWeb();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                telemetry.TrackException(ex);
+                return false;
+            }
+           
 
         }
 

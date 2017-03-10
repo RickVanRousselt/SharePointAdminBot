@@ -12,7 +12,8 @@ namespace AuthBot.Models
         public long ExpiresOnUtcTicks { get; set; }
         public byte[] TokenCache { get; set; }
         public string TenantId { get; set; }
-     
+        public string Upn { get; set; }
+
         public static AuthResult FromADALAuthenticationResult(Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult authResult, Microsoft.IdentityModel.Clients.ActiveDirectory.TokenCache tokenCache)
         {
             var result = new AuthResult
@@ -22,7 +23,8 @@ namespace AuthBot.Models
                 UserUniqueId = authResult.UserInfo.UniqueId,
                 ExpiresOnUtcTicks = authResult.ExpiresOn.UtcTicks,
                 TokenCache = tokenCache.Serialize(),
-                TenantId = authResult.TenantId
+                TenantId = authResult.TenantId,
+                Upn = authResult.UserInfo.DisplayableId
             };
 
             return result;

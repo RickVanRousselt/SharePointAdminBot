@@ -13,7 +13,7 @@ using SharePointAdminBot.Infra;
 namespace SharePointAdminBot.Dialogs
 {
     [Serializable]
-    public class MasterDialog : IDialog<string>
+    public class MasterDialog : IDialog<object>
     {
         private string _resourceId = ConfigurationManager.AppSettings["ActiveDirectory.ResourceId"];
 

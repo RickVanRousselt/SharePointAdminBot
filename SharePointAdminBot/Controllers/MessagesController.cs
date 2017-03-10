@@ -8,6 +8,7 @@ using System.Web.Http;
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Newtonsoft.Json;
 using SharePointAdminBot.Dialogs;
 
 namespace SharePointAdminBot.Controllers
@@ -27,6 +28,7 @@ namespace SharePointAdminBot.Controllers
             {
                 try
                 {
+                    telemetry.TrackTrace($"Entering POST {JsonConvert.SerializeObject(activity)}");
                     await Conversation.SendAsync(activity, () => new MasterDialog());
                 }
                 catch (Exception ex)

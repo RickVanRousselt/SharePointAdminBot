@@ -13,8 +13,12 @@ namespace SharePointAdminBot.Infra
         public static List<string> GetSiteProperties(AuthResult result, string url)
         {
             var telemetry = new TelemetryClient();
+            var telProps = new Dictionary<string, string>();
             try
             {
+                telemetry.TrackTrace("Get Site Properties called");
+                telProps.Add("Url", url);
+                telemetry.TrackEvent("Get Site Properties", telProps);
                 AuthenticationManager authManager = new AuthenticationManager();
                 Site site;
                 var propertyList = new List<string>();
@@ -48,8 +52,12 @@ namespace SharePointAdminBot.Infra
         public static List<string> GetWebProperties(AuthResult result, string url)
         {
             var telemetry = new TelemetryClient();
+            var telProps = new Dictionary<string, string>();
             try
             {
+                telemetry.TrackTrace("Get web Properties called");
+                telProps.Add("Url", url);
+                telemetry.TrackEvent("Get web Properties", telProps);
                 AuthenticationManager authManager = new AuthenticationManager();
                 Web site;
                 var propertyList = new List<string>();

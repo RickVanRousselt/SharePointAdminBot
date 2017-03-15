@@ -31,7 +31,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <ApplicationInsightsResourceId>/subscriptions/90a92ea6-b4a7-4bd0-8891-407553e3b6c8/resourcegroups/SPAdminBot/providers/microsoft.insights/components/SPAdminBotInsights</ApplicationInsightsResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/90a92ea6-b4a7-4bd0-8891-407553e3b6c8/resourcegroups/SPAdminBot_First_Release/providers/microsoft.insights/components/SPAdminBot-Beta</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/90a92ea6-b4a7-4bd0-8891-407553e3b6c8/resourcegroups/SPAdminBot/providers/microsoft.insights/components/SPAdminBotInsights</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -226,6 +226,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppInsightsInitializer.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\FormBuilder.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +244,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Service References\Application Insights\ConnectedService.json" />
-    <None Include="Properties\PublishProfiles\SPAdminBot - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\SPAdminBot.pubxml" />
+    <None Include="Properties\PublishProfiles\SPAdminBot-Beta.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

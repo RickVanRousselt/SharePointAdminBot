@@ -60,6 +60,7 @@ namespace SharePointAdminBot.Infra
             }
             catch (Exception ex)
             {
+                //TODO return ex message
                 telemetry.TrackException(ex,telProps);
             }
             return succes;

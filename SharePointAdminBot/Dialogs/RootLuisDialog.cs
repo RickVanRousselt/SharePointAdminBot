@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AuthBot;
 using AuthBot.Models;
@@ -76,10 +77,16 @@ namespace SharePointAdminBot.Dialogs
         private async Task ReindexSite(IDialogContext context, IAwaitable<AskForUrlQuery> result)
         {
             var formResults = await result;
-            await context.GetAccessToken(formResults.Url);
+            var url = formResults.Url;
+            if (context.Activity.ChannelId == "skype")
+            {
+                url = Helpers.ParseAnchorTag(formResults.Url);
+            }
+
+            await context.GetAccessToken(url);
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
 
-            var success = SharePointInfo.ReIndexSiteCollection(_authResult, formResults.Url);
+            var success = SharePointInfo.ReIndexSiteCollection(_authResult, url);
             if (success)
             {
                 string message = $"Reindexing triggered. What's next?";
@@ -96,10 +103,16 @@ namespace SharePointAdminBot.Dialogs
         private async Task GetSiteCollectionInfo(IDialogContext context, IAwaitable<AskForUrlQuery> result)
         {
             var formResults = await result;
-            await context.GetAccessToken(formResults.Url);
+            var url = formResults.Url;
+            if (context.Activity.ChannelId == "skype")
+            {
+                url = Helpers.ParseAnchorTag(formResults.Url);
+            }
+
+            await context.GetAccessToken(url);
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
 
-            var returnedItems = SharePointInfo.GetSiteProperties(_authResult, formResults.Url);
+            var returnedItems = SharePointInfo.GetSiteProperties(_authResult, url);
 
             foreach (var answer in returnedItems)
             {
@@ -114,10 +127,16 @@ namespace SharePointAdminBot.Dialogs
         private async Task GetWebInfo(IDialogContext context, IAwaitable<AskForUrlQuery> result)
         {
             var formResults = await result;
-            await context.GetAccessToken(formResults.Url);
+            var url = formResults.Url;
+            if (context.Activity.ChannelId == "skype")
+            {
+                url = Helpers.ParseAnchorTag(formResults.Url);
+            }
+
+            await context.GetAccessToken(url);
             context.UserData.TryGetValue(ContextConstants.AuthResultKey, out _authResult);
 
-            var returnedItems = SharePointInfo.GetWebProperties(_authResult, formResults.Url);
+            var returnedItems = SharePointInfo.GetWebProperties(_authResult, url);
 
             foreach (var answer in returnedItems)
             {
@@ -153,5 +172,7 @@ namespace SharePointAdminBot.Dialogs
 
             context.Wait(MessageReceived);
         }
+
+
     }
 }

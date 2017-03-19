@@ -10,15 +10,9 @@ The bot uses [LUIS.AI](https://www.luis.ai) to try and understand what you mean.
 + [Thru Skype](https://join.skype.com/bot/3b1b9f8d-3ee6-4bc1-a221-544b58140b74)
 + [MS Teams](https://teams.microsoft.com/l/chat/0/0?users=28:3b1b9f8d-3ee6-4bc1-a221-544b58140b74)
 
-## If you want your own version of the SharePoint Admin Bot then you can follow these steps.
-* Clone or download the repository
-* Register a new bot in the [Bot Framework](https://dev.botframework.com/) 
-* Change the BotId, MicrosoftAppId and MicrosoftAppPassword in the web.config file
-* Create a new web app in Azure and deploy the code
-* Create a new app in your [Azure AD tenant](https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-how-to-configure-active-directory-authentication)
-* Change the ClientId, ClientSecret and redirect url in the web.config file to your values. If you don't want it to be a multi-tenant app then change the Tenant value also.
-* Now you can start talking to your own personal SharePoint Admin Bot from the Bot Framework test page and if you want you can even configure more channels.
+## If you want your own version of the SharePoint Admin Bot then you can follow the steps in the [wiki](https://github.com/RickVanRousselt/SharePointAdminBot/wiki/How-to-Install)
 
+### Check out our [YouTube Channel](https://www.youtube.com/watch?v=Z3y2NhZZKrQ&index=3&list=PLJuydARUjhplEMoGyi1BqS5Vmvy2rm36T) to see how it works 
 
 
 ## Current features

@@ -17,10 +17,10 @@ namespace SharePointAdminBot.Infra.Forms
         //public string Owner { get; set; }
 
         [Prompt("What's the {&} amount in MB?")]
-        public long Storage { get; set; }
+        public int Storage { get; set; }
 
         [Prompt("What's the {&} amount?")]
-        public long Resource { get; set; }
+        public int Resource { get; set; }
 
         [Prompt("What {&} should the site be? {||}", ChoiceFormat = "{1}")]
         public SiteTemplate SiteTemplate { get; set; }

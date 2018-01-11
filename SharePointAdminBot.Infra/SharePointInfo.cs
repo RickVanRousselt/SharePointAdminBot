@@ -25,10 +25,10 @@ namespace SharePointAdminBot.Infra
                 using (ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url, result.AccessToken))
                 {
                     site = context.Site;
-                    context.Load(site, x => x.AllowDesigner, x => x.CompatibilityLevel, x => x.Id, x => x.AllowCreateDeclarativeWorkflow, x => x.AllowMasterPageEditing, x => x.AllowRevertFromTemplate, x => x.AllowSaveDeclarativeWorkflowAsTemplate, x => x.AllowSavePublishDeclarativeWorkflow, x => x.AllowSelfServiceUpgrade, x => x.AllowSelfServiceUpgradeEvaluation,x => x.AuditLogTrimmingRetention, x => x.CanUpgrade, x => x.Classification, x => x.DisableAppViews, x => x.ExternalSharingTipsEnabled, x => x.Url);
+                    context.Load(site, x => x.AllowDesigner, x => x.CompatibilityLevel, x => x.Id, x => x.AllowCreateDeclarativeWorkflow, x => x.AllowMasterPageEditing, x => x.AllowRevertFromTemplate, x => x.AllowSaveDeclarativeWorkflowAsTemplate, x => x.AllowSavePublishDeclarativeWorkflow, x => x.AllowSelfServiceUpgrade, x => x.AllowSelfServiceUpgradeEvaluation, x => x.AuditLogTrimmingRetention, x => x.CanUpgrade, x => x.Classification, x => x.DisableAppViews, x => x.ExternalSharingTipsEnabled, x => x.Url);
                     context.ExecuteQuery();
                 }
-               
+
                 var siteType = site.GetType();
                 BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
                 var properties = siteType.GetProperties(flags);
@@ -46,7 +46,7 @@ namespace SharePointAdminBot.Infra
                 telemetry.TrackException(ex);
                 return null;
             }
-         
+
         }
 
         public static List<string> GetWebProperties(AuthResult result, string url)
@@ -93,12 +93,18 @@ namespace SharePointAdminBot.Infra
             var telemetry = new TelemetryClient();
             try
             {
+                var myUrl = new Uri(url);
                 AuthenticationManager authManager = new AuthenticationManager();
-               using (
-                    ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(url,
-                        result.AccessToken))
+                using (
+                     ClientContext context = authManager.GetAzureADAccessTokenAuthenticatedContext(myUrl.Scheme + Uri.SchemeDelimiter + myUrl.Host,
+                         result.AccessToken))
                 {
-                    context.Web.ReIndexWeb();
+                    Uri webUrl = Web.WebUrlFromPageUrlDirect(context, myUrl);
+                    using (ClientContext subContext = authManager.GetAzureADAccessTokenAuthenticatedContext(webUrl.ToString(),result.AccessToken))
+                    {
+                        subContext.Web.ReIndexWeb();
+                    }
+
                 }
                 return true;
             }
@@ -107,7 +113,7 @@ namespace SharePointAdminBot.Infra
                 telemetry.TrackException(ex);
                 return false;
             }
-           
+
 
         }
 
@@ -116,6 +122,6 @@ namespace SharePointAdminBot.Infra
             return null;
 
         }
-       
+
     }
 }

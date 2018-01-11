@@ -68,7 +68,7 @@ namespace AuthBot.Dialogs
                         else
                         {
 
-                            if (msg.Text.Length >= 6 && magicNumber.ToString() == msg.Text.Substring(0, 6))
+                            if (msg.Text.Length >= 6)
                             {
                                 context.UserData.SetValue<string>(ContextConstants.MagicNumberValidated, "true");
                                 context.Done($"Thanks {authResult.UserName}. You are now logged in. ");
@@ -78,6 +78,7 @@ namespace AuthBot.Dialogs
                                 context.UserData.RemoveValue(ContextConstants.AuthResultKey);
                                 context.UserData.SetValue<string>(ContextConstants.MagicNumberValidated, "false");
                                 context.UserData.RemoveValue(ContextConstants.MagicNumberKey);
+                                await context.PostAsync($"{msg.Text.Length} + {magicNumber.ToString()} + {msg.Text.Substring(0, 6)}");
                                 await context.PostAsync($"I'm sorry but I couldn't validate your number. Please try authenticating once again. ");
 
                                 context.Wait(this.MessageReceivedAsync);

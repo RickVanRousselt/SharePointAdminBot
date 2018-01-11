@@ -36,5 +36,48 @@ namespace SharePointAdminBot.Dialogs
                 .AddRemainingFields()
                 .Build();
         }
+
+        public IForm<GlobalQuestion> GlobalQuestionForm()
+        {
+            OnCompletionAsyncDelegate<GlobalQuestion> processGlobalQuestionQuery = async (context, state) =>
+            {
+                await context.PostAsync($"Processing....");
+            };
+
+            return new FormBuilder<GlobalQuestion>()
+                .Field(nameof(GlobalQuestion.Choice))
+               // .OnCompletion(processGlobalQuestionQuery)
+                .AddRemainingFields()
+                .Build();
+        }
+        public IForm<CreateQuery> CreateQuestionForm()
+        {
+            OnCompletionAsyncDelegate<CreateQuery> processCreateQuestionQuery = async (context, state) =>
+            {
+                await context.PostAsync($"Processing....");
+            };
+
+            return new FormBuilder<CreateQuery>()
+                .Field(nameof(CreateQuery.Create))
+                //.OnCompletion(processCreateQuestionQuery)
+                .AddRemainingFields()
+                .Build();
+        }
+
+        public IForm<GetInfoQuery> CreateGetInfoForm()
+        {
+            OnCompletionAsyncDelegate<GetInfoQuery> processGetInfoQuestionQuery = async (context, state) =>
+            {
+                await context.PostAsync($"Processing....");
+            };
+
+            return new FormBuilder<GetInfoQuery>()
+                .Field(nameof(GetInfoQuery.GetInfoAbout))
+               // .OnCompletion(processGetInfoQuestionQuery)
+                .AddRemainingFields()
+                .Build();
+        }
+
+
     }
 }

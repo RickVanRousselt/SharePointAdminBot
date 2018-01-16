@@ -36,7 +36,7 @@ I would love if you would help contribute to this project. Not just writing code
 
 
 # More Information
-Check out my [blog](https://www.rickvanrousselt.com/spadminbot/) or contact [Advantive] (https://www.advantive.be/) for more information on the SharePoint Admin Bot.
+Check out my [blog](https://www.rickvanrousselt.com/spadminbot/) or contact [Advantive](https://www.advantive.be/) for more information on the SharePoint Admin Bot.
 
 [![MIT license](https://img.shields.io/npm/l/express.svg)](https://github.com/RickVanRousselt/SharePointAdminBot/blob/master/LICENSE)
 
